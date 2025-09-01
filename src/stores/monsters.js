@@ -23,8 +23,24 @@ export const useMonsterStore = defineStore('monsters', {
     async fetchMonsters() {
       this.loading = true
       try {
+        // First get the list of all monsters
         const response = await axios.get('https://www.dnd5eapi.co/api/monsters')
-        this.monsters = response.data.results
+        const monsterList = response.data.results
+
+        // Then fetch full details for each monster
+        const detailedMonsters = await Promise.all(
+          monsterList.map(async (monster) => {
+            try {
+              const detailResponse = await axios.get(`https://www.dnd5eapi.co/api/monsters/${monster.index}`)
+              return detailResponse.data
+            } catch (err) {
+              console.error(`Error fetching details for ${monster.name}:`, err)
+              return monster // fallback to basic info if detail fetch fails
+            }
+          })
+        )
+
+        this.monsters = detailedMonsters
         this.error = null
       } catch (err) {
         this.error = 'Failed to fetch monsters'
@@ -38,9 +54,18 @@ export const useMonsterStore = defineStore('monsters', {
       this.loading = true
       try {
         const response = await axios.get(`https://www.dnd5eapi.co/api/monsters/${index}`)
-        this.currentMonster = response.data
+        const monsterData = response.data
+        
+        // Try to fetch the image if available
+        if (monsterData.image) {
+          // Don't need to await this, it's just pre-caching the image
+          const img = new Image()
+          img.src = `https://www.dnd5eapi.co${monsterData.image}`
+        }
+
+        this.currentMonster = monsterData
         this.error = null
-        return response.data
+        return monsterData
       } catch (err) {
         this.error = 'Failed to fetch monster details'
         console.error('Error fetching monster details:', err)

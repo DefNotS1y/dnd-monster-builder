@@ -1,104 +1,65 @@
-/* ! tailwindcss v3.4.0 | MIT License | https://tailwindcss.com */
 @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply bg-parchment text-brown-900 font-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medieval text-brown-900;
+  }
+}
+
 @layer components {
   .stat-block {
-    @apply bg-white/80 rounded-lg border-2 border-brown-900 p-6 shadow-lg;
+    @apply bg-white/80 rounded-lg border-2 border-brown-900 p-6 shadow-lg transition-all duration-200;
   }
   
   .btn-primary {
-    @apply bg-brown-900 text-parchment px-6 py-2 rounded-lg font-medieval hover:bg-red-900 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-golden;
+    @apply bg-brown-900 text-parchment px-6 py-2 rounded-lg font-medieval 
+           hover:bg-red-900 transition-colors duration-200 
+           focus:outline-none focus:ring-2 focus:ring-golden
+           disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply bg-parchment text-brown-900 px-6 py-2 rounded-lg font-medieval border-2 border-brown-900 hover:bg-golden hover:border-golden transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-brown-900;
+    @apply bg-parchment text-brown-900 px-6 py-2 rounded-lg font-medieval 
+           border-2 border-brown-900 hover:bg-golden hover:border-golden 
+           transition-colors duration-200 focus:outline-none focus:ring-2 
+           focus:ring-brown-900 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .input-field {
-    @apply bg-parchment border-2 border-brown-900 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-golden;
+    @apply bg-parchment border-2 border-brown-900 rounded-lg px-4 py-2 
+           focus:outline-none focus:ring-2 focus:ring-golden
+           transition-all duration-200 w-full;
   }
 
   .nav-link {
-    @apply px-4 py-2 rounded transition-colors duration-200 text-parchment font-medieval hover:bg-white/10;
+    @apply px-4 py-2 rounded transition-colors duration-200 text-parchment 
+           font-medieval hover:bg-white/10;
   }
-}
 
+  .filter-checkbox {
+    @apply form-checkbox h-4 w-4 text-brown-900 border-brown-900 
+           rounded focus:ring-golden;
+  }
 
-.btn-primary {
-  background-color: var(--color-brown-900);
-  color: var(--color-parchment);
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-family: 'MedievalSharp', cursive;
-  transition: background-color 0.2s;
-}
+  .filter-label {
+    @apply ml-2 text-sm font-medium text-brown-900;
+  }
 
-.btn-primary:hover {
-  background-color: var(--color-red-900);
-}
+  .filter-group {
+    @apply space-y-2 p-4 bg-white/80 rounded-lg border border-brown-900;
+  }
 
-.btn-primary:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--color-golden);
-}
-
-.btn-secondary {
-  background-color: var(--color-parchment);
-  color: var(--color-brown-900);
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-family: 'MedievalSharp', cursive;
-  border: 2px solid var(--color-brown-900);
-  transition: all 0.2s;
-}
-
-.btn-secondary:hover {
-  background-color: var(--color-golden);
-  border-color: var(--color-golden);
-}
-
-.btn-secondary:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--color-brown-900);
-}
-
-.input-field {
-  background-color: var(--color-parchment);
-  border: 2px solid var(--color-brown-900);
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  transition: all 0.2s;
-}
-
-.input-field:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--color-golden);
-}
-
-.nav-link {
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
-  transition: background-color 0.2s;
-  color: var(--color-parchment);
-  font-family: 'MedievalSharp', cursive;
-}
-
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-body {
-  background-color: var(--color-parchment);
-  color: var(--color-brown-900);
-  font-family: 'Crimson Text', serif;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'MedievalSharp', cursive;
+  .filter-title {
+    @apply text-lg font-medieval text-brown-900 mb-2;
+  }
 }
 
 .stat-block {

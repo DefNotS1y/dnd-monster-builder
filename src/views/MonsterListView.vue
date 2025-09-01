@@ -199,30 +199,39 @@ const filters = ref({
 
 // Computed properties for filter options
 const uniqueTypes = computed(() => {
-  const types = new Set(monsterStore.getAllMonsters.map(m => m.type))
+  const types = new Set(monsterStore.getAllMonsters
+    .map(m => m.type)
+    .filter(type => type !== undefined && type !== null)
+  )
   return Array.from(types).sort()
 })
 
-const challengeRatings = [0, 0.125, 0.25, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+const challengeRatings = computed(() => {
+  const crs = new Set(monsterStore.getAllMonsters.map(m => m.challenge_rating))
+  return Array.from(crs).filter(cr => cr !== undefined).sort((a, b) => a - b)
+})
 
-const sizes = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan']
+const sizes = computed(() => {
+  const sizeSet = new Set(monsterStore.getAllMonsters.map(m => m.size))
+  return Array.from(sizeSet).filter(Boolean).sort()
+})
 
-const alignments = [
-  'Lawful Good', 'Neutral Good', 'Chaotic Good',
-  'Lawful Neutral', 'True Neutral', 'Chaotic Neutral',
-  'Lawful Evil', 'Neutral Evil', 'Chaotic Evil'
-]
+const alignments = computed(() => {
+  const alignSet = new Set(monsterStore.getAllMonsters.map(m => m.alignment))
+  return Array.from(alignSet).filter(Boolean).sort()
+})
 
 // Filtered and sorted monsters
 const filteredMonsters = computed(() => {
-  let result = monsterStore.getAllMonsters
+  let result = [...monsterStore.getAllMonsters]
 
   // Text search
   if (filters.value.search) {
     const query = filters.value.search.toLowerCase()
     result = result.filter(monster => 
-      monster.name.toLowerCase().includes(query) ||
-      monster.type.toLowerCase().includes(query)
+      (monster.name?.toLowerCase().includes(query)) ||
+      (monster.type?.toLowerCase().includes(query)) ||
+      (monster.description?.toLowerCase().includes(query))
     )
   }
 
@@ -233,7 +242,11 @@ const filteredMonsters = computed(() => {
 
   // CR filter
   if (filters.value.cr !== '') {
-    result = result.filter(monster => monster.challenge_rating === Number(filters.value.cr))
+    const targetCR = parseFloat(filters.value.cr)
+    result = result.filter(monster => {
+      const monsterCR = parseFloat(monster.challenge_rating)
+      return !isNaN(monsterCR) && monsterCR === targetCR
+    })
   }
 
   // Size filter
@@ -247,14 +260,17 @@ const filteredMonsters = computed(() => {
   }
 
   // Sorting
-  result = result.sort((a, b) => {
+  result.sort((a, b) => {
     switch (filters.value.sortBy) {
-      case 'cr':
-        return (a.challenge_rating || 0) - (b.challenge_rating || 0)
+      case 'cr': {
+        const aCR = parseFloat(a.challenge_rating) || 0
+        const bCR = parseFloat(b.challenge_rating) || 0
+        return aCR - bCR
+      }
       case 'type':
-        return a.type.localeCompare(b.type)
-      default:
-        return a.name.localeCompare(b.name)
+        return (a.type || '').localeCompare(b.type || '')
+      default: // name
+        return (a.name || '').localeCompare(b.name || '')
     }
   })
 

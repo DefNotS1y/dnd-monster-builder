@@ -1,27 +1,52 @@
 <template>
   <div v-if="displayMonster" class="max-w-3xl mx-auto bg-white/80 rounded-lg border-2 border-brown-900 p-6 shadow-lg">
-    <h2 class="text-3xl text-center mb-4 font-medieval text-brown-900">{{ displayMonster.name }}</h2>
-    
-    <div class="flex justify-between border-b-2 border-brown-900 pb-2 mb-4">
-      <p class="font-body">
-        <span class="font-medieval text-red-900">Type:</span> 
-        {{ displayMonster.type }}
-      </p>
-      <p v-if="displayMonster.size" class="font-body">
-        <span class="font-medieval text-red-900">Size:</span> 
-        {{ displayMonster.size }}
-      </p>
+    <!-- Header with Image -->
+    <div class="md:flex gap-6 items-start mb-6">
+      <!-- Monster Info -->
+      <div class="flex-1">
+        <h2 class="text-3xl font-medieval text-brown-900 mb-4">{{ displayMonster.name }}</h2>
+        
+        <div class="flex flex-wrap gap-4 border-b-2 border-brown-900 pb-4">
+          <p class="font-body flex items-center gap-2">
+            <span class="font-semibold text-red-900">Type:</span> 
+            {{ displayMonster.type }}
+          </p>
+          <p v-if="displayMonster.size" class="font-body flex items-center gap-2">
+            <span class="font-semibold text-red-900">Size:</span> 
+            {{ displayMonster.size }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Monster Image -->
+      <div v-if="monsterImageUrl" 
+           class="mt-4 md:mt-0 rounded-lg overflow-hidden border-2 border-brown-900 shadow-lg bg-brown-900/5 w-full md:w-48 h-48 shrink-0">
+        <img
+          :src="monsterImageUrl"
+          :alt="displayMonster.name"
+          class="w-full h-full object-cover"
+          @error="handleImageError"
+        />
+      </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-4 mb-6">
-      <div class="stat-item">
-        <span class="font-medieval">Armor Class:</span> {{ displayMonster.armor_class }}
+    <!-- Combat Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+      <div class="stat-item flex flex-col">
+        <span class="font-semibold text-red-900 mb-1">Armor Class</span> 
+        <span class="font-body">{{ 
+          Array.isArray(displayMonster.armor_class)
+            ? displayMonster.armor_class.map(ac => `${ac.value} (${ac.type})`).join(', ')
+            : displayMonster.armor_class 
+        }}</span>
       </div>
-      <div class="stat-item">
-        <span class="font-medieval">Hit Points:</span> {{ displayMonster.hit_points }}
+      <div class="stat-item flex flex-col">
+        <span class="font-semibold text-red-900 mb-1">Hit Points</span>
+        <span class="font-body">{{ displayMonster.hit_points }}</span>
       </div>
     </div>
 
+    <!-- Ability Scores -->
     <div class="stats-grid mb-6">
       <div class="stat-box">
         <div class="stat-label">STR</div>
@@ -139,6 +164,21 @@ const props = defineProps({
 
 const monsterStore = useMonsterStore()
 const displayMonster = computed(() => props.monster || monsterStore.currentMonster)
+
+import { ref } from 'vue'
+
+const imageError = ref(false)
+
+const monsterImageUrl = computed(() => {
+  if (displayMonster.value?.image && !imageError.value) {
+    return `https://www.dnd5eapi.co${displayMonster.value.image}`
+  }
+  return null
+})
+
+const handleImageError = () => {
+  imageError.value = true
+}
 
 onMounted(async () => {
   if (props.index && !props.monster) {
