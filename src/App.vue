@@ -1,85 +1,119 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <div class="min-h-screen bg-parchment">
+    <!-- Navigation Header -->
+    <header class="bg-brown-900 text-parchment shadow-lg border-b-2 border-golden">
+      <div class="container mx-auto px-4">
+        <nav class="flex items-center justify-between h-16">
+          <h1 class="text-2xl font-medieval">D&D Monster Builder</h1>
+          <div class="flex space-x-4">
+            <RouterLink 
+              v-for="link in links" 
+              :key="link.to" 
+              :to="link.to"
+              class="nav-link"
+              :class="{ 'router-link-active': $route.path === link.to }"
+            >
+              {{ link.text }}
+            </RouterLink>
+          </div>
+        </nav>
+      </div>
+    </header>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+      <RouterView />
+    </main>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    <!-- Footer -->
+    <footer class="bg-brown-900 text-parchment py-4 mt-8">
+      <div class="container mx-auto px-4 text-center">
+        <p class="font-medieval">Built with Vue.js & D&D 5E API</p>
+      </div>
+    </footer>
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+<script>
+export default {
+  data() {
+    return {
+      links: [
+        { to: '/', text: 'Monster List' },
+        { to: '/builder', text: 'Monster Builder' }
+      ]
+    }
   }
+}
+</script>
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+<style>
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+:root {
+  --color-brown-900: #3d2b1f;
+  --color-parchment: #f4e4bc;
+  --color-golden: #c9b037;
+  --color-red-900: #7c1f1f;
+}
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
+.bg-brown-900 {
+  background-color: var(--color-brown-900);
+}
 
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.bg-parchment {
+  background-color: var(--color-parchment);
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='%23e5d5b3' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.text-parchment {
+  color: var(--color-parchment);
+}
+
+.border-golden {
+  border-color: var(--color-golden);
+}
+
+.font-medieval {
+  font-family: 'MedievalSharp', cursive;
+}
+
+.nav-link {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+  color: var(--color-parchment);
+  font-family: 'MedievalSharp', cursive;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.router-link-active {
+  color: var(--color-golden);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-parchment);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brown-900);
+  border-radius: 6px;
+  border: 3px solid var(--color-parchment);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-red-900);
 }
 </style>

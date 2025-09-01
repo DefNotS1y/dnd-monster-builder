@@ -1,35 +1,186 @@
-@import './base.css';
+/* ! tailwindcss v3.4.0 | MIT License | https://tailwindcss.com */
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+@layer base {
+  :root {
+    --color-brown-900: #3D2914;
+    --color-red-900: #5C1D1D;
+    --color-golden: #B8860B;
+    --color-parchment: #F5E6D3;
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
+@layer components {
+  .stat-block {
+    @apply bg-white/80 rounded-lg border-2 border-brown-900 p-6 shadow-lg;
+  }
+  
+  .btn-primary {
+    @apply bg-brown-900 text-parchment px-6 py-2 rounded-lg font-medieval hover:bg-red-900 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-golden;
   }
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+  .btn-secondary {
+    @apply bg-parchment text-brown-900 px-6 py-2 rounded-lg font-medieval border-2 border-brown-900 hover:bg-golden hover:border-golden transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-brown-900;
   }
+
+  .input-field {
+    @apply bg-parchment border-2 border-brown-900 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-golden;
+  }
+
+  .nav-link {
+    @apply px-4 py-2 rounded transition-colors duration-200 text-parchment font-medieval hover:bg-white/10;
+  }
+}
+  }
+
+.btn-primary {
+  background-color: var(--color-brown-900);
+  color: var(--color-parchment);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-family: 'MedievalSharp', cursive;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-red-900);
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-golden);
+}
+
+.btn-secondary {
+  background-color: var(--color-parchment);
+  color: var(--color-brown-900);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-family: 'MedievalSharp', cursive;
+  border: 2px solid var(--color-brown-900);
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-golden);
+  border-color: var(--color-golden);
+}
+
+.btn-secondary:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-brown-900);
+}
+
+.input-field {
+  background-color: var(--color-parchment);
+  border: 2px solid var(--color-brown-900);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s;
+}
+
+.input-field:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-golden);
+}
+
+.nav-link {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+  color: var(--color-parchment);
+  font-family: 'MedievalSharp', cursive;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  background-color: var(--color-parchment);
+  color: var(--color-brown-900);
+  font-family: 'Crimson Text', serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'MedievalSharp', cursive;
+}
+
+.stat-block {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 0.5rem;
+  border: 2px solid var(--color-brown-900);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stat-block h2 {
+  font-size: 1.5rem;
+  color: var(--color-red-900);
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--color-brown-900);
+  padding-bottom: 0.5rem;
+}
+
+.stat-block h3 {
+  font-size: 1.25rem;
+  color: var(--color-brown-900);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.btn-primary {
+  background-color: var(--color-brown-900);
+  color: var(--color-parchment);
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-family: 'MedievalSharp', cursive;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-red-900);
+}
+
+.btn-secondary {
+  background-color: var(--color-parchment);
+  color: var(--color-brown-900);
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-family: 'MedievalSharp', cursive;
+  border: 2px solid var(--color-brown-900);
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-golden);
+  border-color: var(--color-golden);
+}
+
+.input-field {
+  background-color: var(--color-parchment);
+  border: 2px solid var(--color-brown-900);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--color-golden);
+  box-shadow: 0 0 0 2px var(--color-golden);
+}
+
+/* Animation for hover effects */
+@keyframes glowing {
+  0% { box-shadow: 0 0 5px var(--color-golden); }
+  50% { box-shadow: 0 0 20px var(--color-golden); }
+  100% { box-shadow: 0 0 5px var(--color-golden); }
+}
+
+.hover-glow:hover {
+  animation: glowing 1.5s infinite;
 }
