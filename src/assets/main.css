@@ -5,15 +5,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --color-brown-900: #3D2914;
-    --color-red-900: #5C1D1D;
-    --color-golden: #B8860B;
-    --color-parchment: #F5E6D3;
-  }
-}
-
 @layer components {
   .stat-block {
     @apply bg-white/80 rounded-lg border-2 border-brown-900 p-6 shadow-lg;
@@ -35,7 +26,7 @@
     @apply px-4 py-2 rounded transition-colors duration-200 text-parchment font-medieval hover:bg-white/10;
   }
 }
-  }
+
 
 .btn-primary {
   background-color: var(--color-brown-900);
