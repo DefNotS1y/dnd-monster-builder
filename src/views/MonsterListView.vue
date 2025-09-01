@@ -7,8 +7,19 @@
     </div>
 
     <div v-if="monsterStore.loading" class="text-center py-8">
-      <div class="w-12 h-12 border-4 border-parchment border-t-brown-900 rounded-full animate-spin mx-auto"></div>
-      <p class="mt-4 font-medieval text-brown-900">Summoning monsters from the realm...</p>
+      <div class="d20-wrapper mx-auto">
+        <div class="d20-loader">
+          <div class="d20-face">20</div>
+          <div class="d20-face">1</div>
+          <div class="d20-face">15</div>
+          <div class="d20-face">7</div>
+          <div class="d20-face">13</div>
+          <div class="d20-face">9</div>
+          <div class="d20-face">11</div>
+        </div>
+        <div class="d20-glow"></div>
+      </div>
+      <p class="mt-6 font-medieval text-lg text-brown-900">Summoning monsters from the realm...</p>
     </div>
     
     <div v-else-if="monsterStore.error" 
