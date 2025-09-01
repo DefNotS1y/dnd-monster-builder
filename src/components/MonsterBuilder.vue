@@ -48,7 +48,17 @@
         <label class="block">Actions (comma separated):</label>
         <input v-model="actionsInput" class="border p-1 w-full" />
       </div>
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Preview</button>
+      <div class="flex gap-2">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Preview</button>
+        <button 
+          type="button" 
+          @click="saveMonster" 
+          class="bg-green-500 text-white px-4 py-2 rounded"
+          :disabled="!preview"
+        >
+          Save Monster
+        </button>
+      </div>
     </form>
     <div v-if="preview" class="mt-4">
       <h3 class="font-semibold">Preview</h3>
@@ -59,8 +69,10 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useMonsterStore } from '../stores/monsters'
 import MonsterDetail from './MonsterDetail.vue'
 
+const monsterStore = useMonsterStore()
 const monster = ref({
   name: '',
   type: '',
@@ -86,6 +98,27 @@ function previewMonster() {
     .map(name => ({ name, desc: '' }))
   monsterPreview.value = { ...monster.value }
   preview.value = true
+}
+
+function saveMonster() {
+  monsterStore.addCustomMonster(monster.value)
+  // Reset form
+  monster.value = {
+    name: '',
+    type: '',
+    armor_class: 10,
+    hit_points: 1,
+    strength: 10,
+    dexterity: 10,
+    constitution: 10,
+    intelligence: 10,
+    wisdom: 10,
+    charisma: 10,
+    actions: []
+  }
+  actionsInput.value = ''
+  preview.value = false
+  monsterPreview.value = null
 }
 </script>
 
