@@ -326,19 +326,22 @@ const formatSenseName = (name) => {
 
 // Lifecycle hooks
 onMounted(async () => {
-  loading.value = true
-
   if (props.index && !props.monster) {
+    loading.value = true
     try {
       await monsterStore.fetchMonsterDetails(props.index)
     } catch (error) {
       console.error('Error loading monster:', error)
+    } finally {
+      loading.value = false
     }
+  } else {
+    loading.value = false
   }
 })
 
 onUnmounted(() => {
-  loading.value = false
+  // Clean up any resources if needed
 })
 </script>
 

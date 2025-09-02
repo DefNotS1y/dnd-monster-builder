@@ -26,9 +26,7 @@
 
     <div v-else>
       <!-- Filters Bar -->
-      <div
-        class="flex flex-wrap items-center gap-2 bg-white/90 rounded border border-brown-900 p-2 shadow-sm mb-4"
-      >
+      <div class="flex flex-wrap items-center gap-2 bg-white/90 rounded border border-brown-900 p-2 shadow-sm mb-4">
         <!-- Search Input -->
         <div class="flex-1 min-w-[200px]">
           <div class="relative">
@@ -74,7 +72,9 @@
             class="w-full h-7 bg-parchment/50 border border-brown-900 rounded px-2 text-sm focus:outline-none focus:ring-1 focus:ring-golden transition-shadow duration-200"
           >
             <option value="">All CR</option>
-            <option v-for="cr in challengeRatings" :key="cr" :value="cr">CR {{ cr }}</option>
+            <option v-for="cr in challengeRatings" :key="cr" :value="cr">
+              CR {{ cr }}
+            </option>
           </select>
         </div>
 
@@ -86,7 +86,7 @@
               'p-1.5 rounded transition-colors',
               viewMode === 'grid'
                 ? 'bg-brown-900 text-parchment'
-                : 'text-brown-900 hover:bg-brown-900/10',
+                : 'text-brown-900 hover:bg-brown-900/10'
             ]"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,7 +104,7 @@
               'p-1.5 rounded transition-colors',
               viewMode === 'list'
                 ? 'bg-brown-900 text-parchment'
-                : 'text-brown-900 hover:bg-brown-900/10',
+                : 'text-brown-900 hover:bg-brown-900/10'
             ]"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,7 +123,7 @@
       <div
         :class="[
           'grid gap-4',
-          viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1',
+          viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'
         ]"
       >
         <MonsterCard
@@ -160,72 +160,52 @@ const filters = ref({
   cr: '',
   size: '',
   alignment: '',
-  sortBy: 'name',
+  sortBy: 'name'
 })
 
 // Filter options computed properties
 const uniqueTypes = computed(() => {
-  const types = new Set(monsterStore.getAllMonsters.map((m) => m.type))
+  const types = new Set(monsterStore.getAllMonsters.map(m => m.type))
   return Array.from(types).filter(Boolean).sort()
 })
 
 const challengeRatings = computed(() => {
-  const crs = new Set(monsterStore.getAllMonsters.map((m) => m.challenge_rating))
-  return Array.from(crs)
-    .filter(Boolean)
-    .sort((a, b) => a - b)
+  const crs = new Set(monsterStore.getAllMonsters.map(m => m.challenge_rating))
+  return Array.from(crs).filter(Boolean).sort((a, b) => a - b)
 })
 
 // Filtered and sorted monsters
 const filteredMonsters = computed(() => {
-  // Start with array of valid monsters
-  let result = (monsterStore.getAllMonsters || []).filter(
-    (monster) => monster && typeof monster === 'object' && monster.name,
-  )
+  let result = [...monsterStore.getAllMonsters]
 
   // Text search
-  if (filters.value?.search?.trim()) {
-    const query = filters.value.search.toLowerCase().trim()
-    result = result.filter((monster) => {
-      const searchTerms = [
-        monster.name,
-        monster.type,
-        monster.size,
-        monster.alignment,
-        monster.challenge_rating != null ? `CR ${monster.challenge_rating}` : '',
-        monster.challenge_rating != null ? `Challenge Rating ${monster.challenge_rating}` : '',
-      ]
-        .filter(Boolean)
-        .map((term) => String(term).toLowerCase())
-
-      return searchTerms.some((term) => term.includes(query))
-    })
-  }
-
-  // Type filter
-  if (filters.value?.type) {
-    result = result.filter(
-      (monster) => monster.type && monster.type.toLowerCase() === filters.value.type.toLowerCase(),
+  if (filters.value.search) {
+    const query = filters.value.search.toLowerCase()
+    result = result.filter(monster => 
+      monster.name.toLowerCase().includes(query) ||
+      monster.type.toLowerCase().includes(query)
     )
   }
 
-  // CR filter
-  if (filters.value?.cr !== '') {
-    result = result.filter((monster) => {
-      if (monster.challenge_rating == null) return false
-      const monsterCR = String(monster.challenge_rating)
-      const filterCR = String(filters.value.cr)
-      return monsterCR === filterCR
-    })
+  // Type filter
+  if (filters.value.type) {
+    result = result.filter(monster => monster.type === filters.value.type)
   }
 
-  // Sort results
-  return result.sort((a, b) => {
-    if (filters.value?.sortBy === 'cr') {
-      return (parseFloat(a.challenge_rating) || 0) - (parseFloat(b.challenge_rating) || 0)
+  // CR filter
+  if (filters.value.cr !== '') {
+    result = result.filter(monster => monster.challenge_rating === filters.value.cr)
+  }
+
+  // Sorting
+  result.sort((a, b) => {
+    if (filters.value.sortBy === 'cr') {
+      return (a.challenge_rating || 0) - (b.challenge_rating || 0)
     }
-    return String(a.name).localeCompare(String(b.name))
+    return a.name.localeCompare(b.name)
   })
+
+  return result
 })
 
 onMounted(async () => {

@@ -1,0 +1,469 @@
+<script setup>
+import { ref } from 'vue'
+import { useMonsterStore } from '../stores/monsters'
+import MonsterDetail from './MonsterDetail.vue'
+
+const monsterStore = useMonsterStore()
+
+const monsterTypes = [
+  'aberration',
+  'beast',
+  'celestial',
+  'construct',
+  'dragon',
+  'elemental',
+  'fey',
+  'fiend',
+  'giant',
+  'humanoid',
+  'monstrosity',
+  'ooze',
+  'plant',
+  'undead'
+]
+
+const challengeRatings = [
+  { rating: '0', xp: 10 },
+  { rating: '1/8', xp: 25 },
+  { rating: '1/4', xp: 50 },
+  { rating: '1/2', xp: 100 },
+  { rating: '1', xp: 200 },
+  { rating: '2', xp: 450 },
+  { rating: '3', xp: 700 },
+  { rating: '4', xp: 1100 },
+  { rating: '5', xp: 1800 },
+  { rating: '6', xp: 2300 },
+  { rating: '7', xp: 2900 },
+  { rating: '8', xp: 3900 },
+  { rating: '9', xp: 5000 },
+  { rating: '10', xp: 5900 },
+  { rating: '11', xp: 7200 },
+  { rating: '12', xp: 8400 },
+  { rating: '13', xp: 10000 },
+  { rating: '14', xp: 11500 },
+  { rating: '15', xp: 13000 },
+  { rating: '16', xp: 15000 },
+  { rating: '17', xp: 18000 },
+  { rating: '18', xp: 20000 },
+  { rating: '19', xp: 22000 },
+  { rating: '20', xp: 25000 },
+  { rating: '21', xp: 33000 },
+  { rating: '22', xp: 41000 },
+  { rating: '23', xp: 50000 },
+  { rating: '24', xp: 62000 },
+  { rating: '25', xp: 75000 },
+  { rating: '26', xp: 90000 },
+  { rating: '27', xp: 105000 },
+  { rating: '28', xp: 120000 },
+  { rating: '29', xp: 135000 },
+  { rating: '30', xp: 155000 }
+]
+
+const damageTypes = [
+  'acid',
+  'bludgeoning',
+  'cold',
+  'fire',
+  'force',
+  'lightning',
+  'necrotic',
+  'piercing',
+  'poison',
+  'psychic',
+  'radiant',
+  'slashing',
+  'thunder'
+]
+
+const abilities = [
+  { key: 'strength', label: 'STR' },
+  { key: 'dexterity', label: 'DEX' },
+  { key: 'constitution', label: 'CON' },
+  { key: 'intelligence', label: 'INT' },
+  { key: 'wisdom', label: 'WIS' },
+  { key: 'charisma', label: 'CHA' }
+]
+
+const monster = ref({
+  name: '',
+  type: '',
+  size: 'Medium',
+  armor_class: 10,
+  hit_points: 1,
+  hit_dice: '',
+  speed: {
+    walk: '30',
+    fly: '',
+    swim: '',
+    climb: '',
+    burrow: ''
+  },
+  strength: 10,
+  dexterity: 10,
+  constitution: 10,
+  intelligence: 10,
+  wisdom: 10,
+  charisma: 10,
+  challenge_rating: '0',
+  xp: 10,
+  damage_resistances: [],
+  damage_immunities: [],
+  damage_vulnerabilities: [],
+  actions: []
+})
+
+const preview = ref(false)
+const monsterPreview = ref(null)
+
+function addAction() {
+  monster.value.actions.push({
+    name: '',
+    desc: ''
+  })
+}
+
+function removeAction(index) {
+  monster.value.actions.splice(index, 1)
+}
+
+function updateXP() {
+  const cr = challengeRatings.find(cr => cr.rating === monster.value.challenge_rating)
+  if (cr) {
+    monster.value.xp = cr.xp
+  }
+}
+
+function previewMonster() {
+  const formattedSpeed = {}
+  for (const [type, value] of Object.entries(monster.value.speed)) {
+    if (value) {
+      formattedSpeed[type] = `${value} ft.`
+    }
+  }
+
+  monsterPreview.value = {
+    ...monster.value,
+    speed: formattedSpeed,
+    hit_points_roll: monster.value.hit_dice 
+      ? `${monster.value.hit_points} (${monster.value.hit_dice})`
+      : monster.value.hit_points.toString()
+  }
+  preview.value = true
+}
+
+function saveMonster() {
+  monsterStore.addCustomMonster(monster.value)
+  monster.value = {
+    name: '',
+    type: '',
+    size: 'Medium',
+    armor_class: 10,
+    hit_points: 1,
+    hit_dice: '',
+    speed: {
+      walk: '30',
+      fly: '',
+      swim: '',
+      climb: '',
+      burrow: ''
+    },
+    strength: 10,
+    dexterity: 10,
+    constitution: 10,
+    intelligence: 10,
+    wisdom: 10,
+    charisma: 10,
+    challenge_rating: '0',
+    xp: 10,
+    damage_resistances: [],
+    damage_immunities: [],
+    damage_vulnerabilities: [],
+    actions: []
+  }
+  preview.value = false
+  monsterPreview.value = null
+}
+</script>
+
+<template>
+  <div class="max-w-4xl mx-auto bg-white/80 rounded-lg border-2 border-brown-900 p-3 shadow-lg">
+    <h2 class="text-2xl text-center mb-4 font-medieval text-brown-900">Forge Your Monster</h2>
+
+    <form @submit.prevent="previewMonster" class="space-y-3">
+      <!-- Basic Info -->
+      <div class="grid grid-cols-2 gap-3">
+        <div class="col-span-2 max-w-xl mx-auto">
+          <label class="block font-medieval mb-1 text-red-900">Name:</label>
+          <input
+            v-model="monster.name"
+            class="w-full bg-parchment border-2 border-brown-900 rounded-lg px-3 py-1 h-8 focus:outline-none focus:ring-2 focus:ring-golden"
+            required
+          />
+        </div>
+        <div>
+          <label class="block font-medieval mb-1 text-red-900">Type:</label>
+          <select
+            v-model="monster.type"
+            class="w-full bg-parchment border-2 border-brown-900 rounded-lg px-3 py-1 h-8 focus:outline-none focus:ring-2 focus:ring-golden"
+            required
+          >
+            <option value="">Select a type</option>
+            <option v-for="type in monsterTypes" :key="type" :value="type">
+              {{ type.charAt(0).toUpperCase() + type.slice(1) }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-medieval mb-1 text-red-900">Size:</label>
+          <select
+            v-model="monster.size"
+            class="w-full bg-parchment border-2 border-brown-900 rounded-lg px-3 py-1 h-8 focus:outline-none focus:ring-2 focus:ring-golden"
+            required
+          >
+            <option value="Tiny">Tiny</option>
+            <option value="Small">Small</option>
+            <option value="Medium">Medium</option>
+            <option value="Large">Large</option>
+            <option value="Huge">Huge</option>
+            <option value="Gargantuan">Gargantuan</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Combat Stats -->
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block font-medieval mb-1 text-red-900">Armor Class:</label>
+          <input
+            type="number"
+            v-model.number="monster.armor_class"
+            class="w-full bg-parchment border-2 border-brown-900 rounded-lg px-3 py-1 h-8 focus:outline-none focus:ring-2 focus:ring-golden"
+            required
+          />
+        </div>
+        <div>
+          <label class="block font-medieval mb-1 text-red-900">Hit Points Formula:</label>
+          <div class="flex gap-2 items-center">
+            <input
+              type="number"
+              v-model.number="monster.hit_points"
+              class="w-full bg-parchment border-2 border-brown-900 rounded-lg px-3 py-1 h-8 focus:outline-none focus:ring-2 focus:ring-golden"
+              required
+            />
+            <input
+              type="text"
+              v-model="monster.hit_dice"
+              placeholder="e.g., 3d8+6"
+              class="w-full bg-parchment border-2 border-brown-900 rounded-lg px-3 py-1 h-8 focus:outline-none focus:ring-2 focus:ring-golden"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Challenge Rating -->
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block font-medieval mb-1 text-red-900">Challenge Rating:</label>
+          <select
+            v-model="monster.challenge_rating"
+            @change="updateXP"
+            class="w-full bg-parchment border-2 border-brown-900 rounded-lg px-3 py-1 h-8 focus:outline-none focus:ring-2 focus:ring-golden"
+            required
+          >
+            <option v-for="cr in challengeRatings" :key="cr.rating" :value="cr.rating">
+              {{ cr.rating }} ({{ cr.xp }} XP)
+            </option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-medieval mb-1 text-red-900">XP:</label>
+          <input
+            type="number"
+            v-model.number="monster.xp"
+            class="w-full bg-parchment border-2 border-brown-900 rounded-lg px-3 py-1 h-8 focus:outline-none focus:ring-2 focus:ring-golden"
+            readonly
+          />
+        </div>
+      </div>
+
+      <!-- Damage Types -->
+      <div class="space-y-3">
+        <h3 class="font-medieval text-lg text-red-900">Damage Properties</h3>
+
+        <!-- Vulnerabilities -->
+        <div class="bg-white/50 p-3 rounded-lg border-2 border-brown-900">
+          <label class="block font-medieval mb-1 text-red-900">Vulnerabilities:</label>
+          <div class="flex flex-wrap gap-2">
+            <div v-for="type in damageTypes" :key="'vuln-'+type" class="flex items-center">
+              <input
+                type="checkbox"
+                :id="'vuln-'+type"
+                :value="type"
+                v-model="monster.damage_vulnerabilities"
+                class="form-checkbox h-4 w-4 text-brown-900 border-brown-900 rounded focus:ring-golden"
+              />
+              <label :for="'vuln-'+type" class="ml-2 text-sm capitalize">{{ type }}</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resistances -->
+        <div class="bg-white/50 p-3 rounded-lg border-2 border-brown-900">
+          <label class="block font-medieval mb-1 text-red-900">Resistances:</label>
+          <div class="flex flex-wrap gap-2">
+            <div v-for="type in damageTypes" :key="'resist-'+type" class="flex items-center">
+              <input
+                type="checkbox"
+                :id="'resist-'+type"
+                :value="type"
+                v-model="monster.damage_resistances"
+                class="form-checkbox h-4 w-4 text-brown-900 border-brown-900 rounded focus:ring-golden"
+              />
+              <label :for="'resist-'+type" class="ml-2 text-sm capitalize">{{ type }}</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Immunities -->
+        <div class="bg-white/50 p-3 rounded-lg border-2 border-brown-900">
+          <label class="block font-medieval mb-1 text-red-900">Immunities:</label>
+          <div class="flex flex-wrap gap-2">
+            <div v-for="type in damageTypes" :key="'immune-'+type" class="flex items-center">
+              <input
+                type="checkbox"
+                :id="'immune-'+type"
+                :value="type"
+                v-model="monster.damage_immunities"
+                class="form-checkbox h-4 w-4 text-brown-900 border-brown-900 rounded focus:ring-golden"
+              />
+              <label :for="'immune-'+type" class="ml-2 text-sm capitalize">{{ type }}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Speed -->
+      <div>
+        <h3 class="font-medieval text-lg mb-3 text-red-900">Speed</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div v-for="(value, type) in monster.speed" :key="type">
+            <label class="block font-medieval mb-1 text-brown-900 capitalize">{{ type }}:</label>
+            <div class="flex">
+              <input
+                type="number"
+                v-model.number="monster.speed[type]"
+                class="w-full bg-parchment border-2 border-r-0 border-brown-900 rounded-l-lg px-3 py-1 h-8 focus:outline-none focus:ring-2 focus:ring-golden"
+                min="0"
+                :placeholder="type === 'walk' ? '30' : '0'"
+              />
+              <span class="bg-parchment border-2 border-l-0 border-brown-900 rounded-r-lg px-2 py-1 h-8 text-brown-900 font-medieval flex items-center">
+                ft
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ability Scores -->
+      <div>
+        <h3 class="font-medieval text-lg mb-3 text-center text-brown-900">Ability Scores</h3>
+        <div class="grid grid-cols-3 gap-3">
+          <div
+            v-for="ability in abilities"
+            :key="ability.key"
+            class="bg-white/50 border-2 border-brown-900 rounded-lg p-3"
+          >
+            <label class="block font-medieval mb-1 text-red-900">{{ ability.label }}:</label>
+            <input
+              type="number"
+              v-model.number="monster[ability.key]"
+              class="w-full bg-parchment border-2 border-brown-900 rounded-lg px-3 py-1 h-8 focus:outline-none focus:ring-2 focus:ring-golden text-center"
+              required
+              min="1"
+              max="30"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <label class="font-medieval text-red-900">Actions:</label>
+          <button
+            @click="addAction"
+            type="button"
+            class="bg-brown-900 text-parchment px-3 py-1 h-7 rounded-lg font-medieval text-sm hover:bg-red-900 transition-colors duration-200"
+          >
+            Add Action
+          </button>
+        </div>
+        <div class="space-y-3">
+          <div
+            v-for="(action, index) in monster.actions"
+            :key="index"
+            class="bg-white/50 p-3 rounded-lg border-2 border-brown-900"
+          >
+            <div class="flex justify-between gap-3 mb-2">
+              <input
+                v-model="action.name"
+                placeholder="Action Name"
+                class="flex-1 bg-parchment border-2 border-brown-900 rounded-lg px-3 py-1 h-8 focus:outline-none focus:ring-2 focus:ring-golden"
+              />
+              <button
+                @click="removeAction(index)"
+                type="button"
+                class="bg-red-900 text-parchment px-3 py-1 h-8 rounded-lg font-medieval text-sm hover:bg-brown-900 transition-colors duration-200"
+              >
+                Remove
+              </button>
+            </div>
+            <textarea
+              v-model="action.desc"
+              placeholder="Action Description (e.g., Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) slashing damage.)"
+              class="w-full bg-parchment border-2 border-brown-900 rounded-lg px-3 py-2 h-20 resize-none focus:outline-none focus:ring-2 focus:ring-golden"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-center gap-3">
+        <button
+          type="submit"
+          class="bg-brown-900 text-parchment px-4 py-1 h-8 rounded-lg font-medieval hover:bg-red-900 transition-colors duration-200"
+        >
+          Preview Monster
+        </button>
+        <button
+          type="button"
+          @click="saveMonster"
+          class="bg-parchment text-brown-900 px-4 py-1 h-8 rounded-lg font-medieval border-2 border-brown-900 hover:bg-golden hover:border-golden transition-colors duration-200"
+          :disabled="!preview"
+          :class="{ 'opacity-50 cursor-not-allowed': !preview }"
+        >
+          Save to Bestiary
+        </button>
+      </div>
+    </form>
+
+    <!-- Preview -->
+    <div v-if="preview" class="mt-8">
+      <h3 class="font-medieval text-2xl text-center mb-4 text-brown-900">Monster Preview</h3>
+      <MonsterDetail :monster="monsterPreview" />
+    </div>
+  </div>
+</template>
+
+<style scoped>
+input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>

@@ -41,9 +41,19 @@ import { RouterLink, RouterView } from 'vue-router'
     <!-- Navigation Header -->
     <header class="bg-brown-900 text-parchment shadow-lg border-b-2 border-golden">
       <div class="container mx-auto px-4">
-        <nav class="flex items-center justify-between h-16">
-          <h1 class="text-2xl font-medieval">Dungeons and Dragons Monster Builder</h1>
-          <div class="flex space-x-4">
+        <nav class="relative flex items-center justify-between h-16">
+          <img
+            src="@/assets/logo_mb.png"
+            alt="Monster Builder Logo"
+            class="h-12 w-auto absolute left-1"
+          />
+          <h1
+            class="text-2xl font-medieval absolute left-1/2 -translate-x-1/2"
+            style="color: #f5e6d3"
+          >
+            Dungeons and Dragons Monster Builder
+          </h1>
+          <div class="flex space-x-4 ml-auto">
             <RouterLink
               v-for="link in links"
               :key="link.to"

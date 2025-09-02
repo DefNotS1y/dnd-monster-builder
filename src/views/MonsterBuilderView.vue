@@ -1,7 +1,10 @@
 <template>
-  <div class="p-4">
-    <h1 class="text-2xl font-bold mb-4">Monster Builder</h1>
-    <MonsterBuilder />
+  <div class="relative min-h-screen flex flex-col items-center p-4">
+    <!-- Dark overlay -->
+    <div class="absolute inset-0 bg-black/40 -z-10"></div>
+    <div class="w-full">
+      <MonsterBuilder />
+    </div>
   </div>
 </template>
 
