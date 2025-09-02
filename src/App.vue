@@ -3,16 +3,50 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
-  <div class="min-h-screen bg-parchment">
+  <div class="flex flex-col min-h-screen bg-parchment overflow-x-hidden">
+    <!-- Loading Overlay -->
+    <div
+      v-if="isLoading"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-brown-900/90"
+    >
+      <div class="text-center">
+        <div class="mb-4">
+          <svg class="animate-spin-slow mx-auto w-20 h-20" viewBox="0 0 24 24">
+            <path
+              fill="none"
+              stroke="var(--color-golden)"
+              stroke-width="2"
+              d="M12 2 L12 6 M12 18 L12 22 M4.93 4.93 L7.76 7.76 M16.24 16.24 L19.07 19.07 M2 12 L6 12 M18 12 L22 12 M4.93 19.07 L7.76 16.24 M16.24 7.76 L19.07 4.93"
+            >
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from="0 12 12"
+                to="360 12 12"
+                dur="3s"
+                repeatCount="indefinite"
+              />
+            </path>
+          </svg>
+        </div>
+        <p class="text-parchment font-medieval text-2xl">Rolling for Initiative...</p>
+        <div class="mt-4 space-y-1">
+          <div class="loading-rune"></div>
+          <div class="loading-rune"></div>
+          <div class="loading-rune"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- Navigation Header -->
     <header class="bg-brown-900 text-parchment shadow-lg border-b-2 border-golden">
       <div class="container mx-auto px-4">
         <nav class="flex items-center justify-between h-16">
-          <h1 class="text-2xl font-medieval">D&D Monster Builder</h1>
+          <h1 class="text-2xl font-medieval">Dungeons and Dragons Monster Builder</h1>
           <div class="flex space-x-4">
-            <RouterLink 
-              v-for="link in links" 
-              :key="link.to" 
+            <RouterLink
+              v-for="link in links"
+              :key="link.to"
               :to="link.to"
               class="nav-link"
               :class="{ 'router-link-active': $route.path === link.to }"
@@ -25,12 +59,16 @@ import { RouterLink, RouterView } from 'vue-router'
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-      <RouterView />
+    <main class="container mx-auto px-4 py-8 flex-grow">
+      <RouterView v-slot="{ Component }">
+        <Transition name="fade" mode="out-in">
+          <component :is="Component" @loading="setLoading" />
+        </Transition>
+      </RouterView>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-brown-900 text-parchment py-4 mt-8">
+    <footer class="bg-brown-900 text-parchment py-4 mt-auto">
       <div class="container mx-auto px-4 text-center">
         <p class="font-medieval">Built with Vue.js & D&D 5E API</p>
       </div>
@@ -44,10 +82,16 @@ export default {
     return {
       links: [
         { to: '/', text: 'Monster List' },
-        { to: '/builder', text: 'Monster Builder' }
-      ]
+        { to: '/builder', text: 'Monster Builder' },
+      ],
+      isLoading: false,
     }
-  }
+  },
+  methods: {
+    setLoading(value) {
+      this.isLoading = value
+    },
+  },
 }
 </script>
 
@@ -59,7 +103,7 @@ export default {
   --color-parchment: #f4e4bc;
   --color-golden: #c9b037;
   --color-red-900: #7c1f1f;
-  
+
   /* Font families */
   --font-heading: 'MedievalSharp', cursive;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -74,9 +118,60 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   letter-spacing: -0.025em;
+}
+
+/* Loading animations */
+@keyframes runeGlow {
+  0% {
+    width: 0%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
+}
+
+.loading-rune {
+  height: 2px;
+  background: var(--color-golden);
+  margin: 0 auto;
+  max-width: 200px;
+  animation: runeGlow 2s ease-in-out infinite;
+}
+
+.loading-rune:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.loading-rune:nth-child(3) {
+  animation-delay: 1s;
+}
+
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
+/* Page transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 .bg-brown-900 {
@@ -85,7 +180,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .bg-parchment {
   background-color: var(--color-parchment);
-  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='%23e5d5b3' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+  background-image:
+    linear-gradient(rgba(245, 230, 211, 0.7), rgba(245, 230, 211, 0.7)),
+    url('@/assets/faerun_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  min-height: 100vh;
 }
 
 .text-parchment {
