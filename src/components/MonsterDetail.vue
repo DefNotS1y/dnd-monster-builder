@@ -315,6 +315,7 @@ const monsterImageUrl = computed(() => {
 
 const handleImageError = () => {
   imageError.value = true
+  console.warn(`Failed to load image for monster: ${displayMonster.value?.name}`)
 }
 
 const formatSenseName = (name) => {
@@ -341,7 +342,10 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
-  // Clean up any resources if needed
+  // Clear monster details when component is unmounted
+  monsterStore.currentMonster = null
+  imageError.value = false
+  loading.value = true
 })
 </script>
 

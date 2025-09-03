@@ -1,5 +1,17 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { ref } from 'vue'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
+
+const route = useRoute()
+const isLoading = ref(false)
+const links = [
+  { to: '/', text: 'Monster List' },
+  { to: '/builder', text: 'Monster Builder' },
+]
+
+const setLoading = (value) => {
+  isLoading.value = value
+}
 </script>
 
 <template>
@@ -86,24 +98,36 @@ import { RouterLink, RouterView } from 'vue-router'
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      links: [
-        { to: '/', text: 'Monster List' },
-        { to: '/builder', text: 'Monster Builder' },
-      ],
-      isLoading: false,
-    }
-  },
-  methods: {
-    setLoading(value) {
-      this.isLoading = value
-    },
-  },
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
 }
-</script>
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.loading-rune {
+  width: 100px;
+  height: 4px;
+  background: var(--color-golden);
+  margin: 0 auto;
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    opacity: 0.5;
+    box-shadow: 0 0 5px var(--color-golden);
+  }
+  to {
+    opacity: 1;
+    box-shadow: 0 0 20px var(--color-golden);
+  }
+}
+</style>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Inter:wght@400;500;600;700&display=swap');
