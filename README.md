@@ -1,4 +1,121 @@
-# D&D Monster Builder
+# D&D Monster Builder 🎲
+
+A Vue.js-based web application for creating, managing, and viewing Dungeons & Dragons 5E monsters with an interactive user interface and real-time previews.
+
+## Features 🛠️
+
+### Monster Management
+- View complete list of D&D 5E monsters
+- Search and filter monsters by:
+  - Challenge Rating (CR)
+  - Type (Dragon, Undead, etc.)
+  - Size
+  - Alignment
+- Detailed monster stat blocks
+- Custom monster creation
+
+### Interactive UI
+- Medieval/Fantasy themed design
+- Animated 2D/3D D20 dice loading animation
+- Responsive layout for all devices
+- Real-time monster stat block preview
+- Interactive filters and search
+
+### Custom Monster Builder
+- Create custom monsters with:
+  - Basic stats (HP, AC, Speed)
+  - Ability scores
+  - Actions and abilities
+  - Damage resistances/immunities
+  - Custom descriptions
+
+## Tech Stack 💻
+
+### Frontend
+- **Vue 3** - Progressive JavaScript framework
+- **Vue Router** - Official router for Vue.js
+- **Pinia** - State management
+- **Tailwind CSS** - Utility-first CSS framework
+- **Three.js** (planned) - 3D graphics library for dice animations
+
+### API
+- **D&D 5E API** - RESTful API for D&D content
+- **Axios** - HTTP client for API requests
+
+## Learning Opportunities 📚
+
+This project helps learn modern web development concepts:
+
+### Vue.js Ecosystem
+- Component-based architecture
+- Reactive state management
+- Route handling
+- Lifecycle hooks
+- Computed properties
+- Custom events
+
+### CSS & Design
+- Tailwind utility classes
+- CSS animations
+- Responsive design
+- CSS variables
+- 3D transforms
+- Custom themes
+
+### JavaScript
+- Modern ES6+ features
+- Async/await
+- API integration
+- Data manipulation
+- Event handling
+- State management
+
+### Best Practices
+- Component reusability
+- Clean code structure
+- Performance optimization
+- Git version control
+- Project organization
+
+## Getting Started 🚀
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/dnd-monster-builder.git
+```
+
+2. Install dependencies:
+```bash
+cd monster-builder
+npm install
+```
+
+3. Run development server:
+```bash
+npm run dev
+```
+
+## Future Enhancements 🎯
+
+- [ ] 3D dice rolling animation using Three.js
+- [ ] User authentication
+- [ ] Save custom monsters
+- [ ] Export monster data
+- [ ] Spell integration
+- [ ] Custom image upload
+- [ ] Advanced search filters
+
+## Contributing 🤝
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License 📄
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+*This project is not affiliated with Wizards of the Coast. D&D and all related properties are trademarks of Wizards of the Coast LLC.*
 
 An interactive web application for creating and managing Dungeons & Dragons monster stat blocks. This project showcases modern web development practices and Vue.js expertise.
 
