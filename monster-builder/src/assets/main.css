@@ -1,0 +1,534 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+@import './loading.css';
+
+:root {
+  --color-golden: #b8860b;
+  --color-brown-900: #402917;
+  --color-parchment: #f5e6d3;
+  --dice-size: 100px;
+  --dice-animation-duration: 4s;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: var(--color-parchment);
+    color: var(--color-brown-900);
+    font-family: 'Crimson Text', serif;
+  }
+
+  .site-logo {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
+    max-width: 240px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'MedievalSharp', cursive;
+    color: var(--color-brown-900);
+  }
+}
+
+@layer components {
+  .stat-block {
+    @apply bg-white/80 rounded-lg border-2 border-brown-900 p-6 shadow-lg transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-brown-900 text-parchment px-6 py-2 rounded-lg font-medieval
+           hover:bg-red-900 transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-golden
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-parchment text-brown-900 px-6 py-2 rounded-lg font-medieval
+           border-2 border-brown-900 hover:bg-golden hover:border-golden
+           transition-colors duration-200 focus:outline-none focus:ring-2
+           focus:ring-brown-900 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .input-field {
+    @apply bg-parchment border-2 border-brown-900 rounded-lg px-4 py-2
+           focus:outline-none focus:ring-2 focus:ring-golden
+           transition-all duration-200 w-full;
+  }
+
+  .nav-link {
+    @apply px-4 py-2 rounded transition-colors duration-200 text-parchment
+           font-medieval hover:bg-white/10;
+  }
+
+  .filter-input {
+    @apply w-full bg-parchment/50 border-2 border-brown-900 rounded-lg px-4 py-2
+           focus:outline-none focus:ring-2 focus:ring-golden
+           transition-shadow duration-200;
+  }
+
+  .filter-label {
+    @apply block font-medieval text-brown-900 mb-2;
+  }
+
+  .filter-section {
+    @apply bg-white/90 backdrop-blur-sm rounded-lg border-2 border-golden p-4
+           shadow-medieval mb-8;
+  }
+
+  .filter-group {
+    @apply grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4;
+  }
+}
+
+.stat-block {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 0.5rem;
+  border: 2px solid var(--color-brown-900);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stat-block h2 {
+  font-size: 1.5rem;
+  color: var(--color-red-900);
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--color-brown-900);
+  padding-bottom: 0.5rem;
+}
+
+.stat-block h3 {
+  font-size: 1.25rem;
+  color: var(--color-brown-900);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.btn-primary {
+  background-color: var(--color-brown-900);
+  color: var(--color-parchment);
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--color-brown-900);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  perspective: 1000px;
+}
+
+.dice-wrapper {
+  position: relative;
+  width: var(--dice-size);
+  height: var(--dice-size);
+  transform-style: preserve-3d;
+}
+
+.d20-container {
+  --dice-size: 100px;
+  width: var(--dice-size);
+  height: var(--dice-size);
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: calc(var(--dice-size) * 4);
+  margin: calc(var(--dice-size) * 0.5) auto;
+  animation: spin var(--dice-animation-duration) infinite cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.d20-face {
+  position: absolute;
+  width: calc(var(--dice-size) * 0.8);
+  height: calc(var(--dice-size) * 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'MedievalSharp', cursive;
+  font-size: calc(var(--dice-size) * 0.25);
+  color: var(--color-golden);
+  text-shadow: 0 0 5px var(--color-golden);
+  backface-visibility: visible;
+  transform-style: preserve-3d;
+  clip-path: polygon(50% 0%, 100% 80%, 0% 80%);
+  background: linear-gradient(to bottom, var(--color-brown-900), #2a1c0f);
+  border: 2px solid var(--color-golden);
+}
+
+/* Transform calculations for icosahedron faces */
+.d20-face:nth-child(1) {
+  transform: translateZ(calc(var(--dice-size) * 0.3)) rotateX(0deg);
+}
+
+/* Upper ring - Golden ratio-based angles */
+.d20-face:nth-child(2) {
+  transform: rotateY(72deg) rotateX(63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+.d20-face:nth-child(3) {
+  transform: rotateY(144deg) rotateX(63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+.d20-face:nth-child(4) {
+  transform: rotateY(216deg) rotateX(63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+.d20-face:nth-child(5) {
+  transform: rotateY(288deg) rotateX(63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+/* Next ring */
+.d20-face:nth-child(6) {
+  transform: rotateY(36deg) rotateX(-63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+.d20-face:nth-child(7) {
+  transform: rotateY(108deg) rotateX(-63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+.d20-face:nth-child(8) {
+  transform: rotateY(180deg) rotateX(-63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+.d20-face:nth-child(9) {
+  transform: rotateY(252deg) rotateX(-63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+.d20-face:nth-child(10) {
+  transform: rotateY(324deg) rotateX(-63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+/* Middle ring */
+.d20-face:nth-child(11) {
+  transform: rotateY(36deg) rotateX(11.5deg) translateZ(calc(var(--dice-size) * 0.4));
+}
+
+.d20-face:nth-child(12) {
+  transform: rotateY(108deg) rotateX(11.5deg) translateZ(calc(var(--dice-size) * 0.4));
+}
+
+.d20-face:nth-child(13) {
+  transform: rotateY(180deg) rotateX(11.5deg) translateZ(calc(var(--dice-size) * 0.4));
+}
+
+.d20-face:nth-child(14) {
+  transform: rotateY(252deg) rotateX(11.5deg) translateZ(calc(var(--dice-size) * 0.4));
+}
+
+.d20-face:nth-child(15) {
+  transform: rotateY(324deg) rotateX(11.5deg) translateZ(calc(var(--dice-size) * 0.4));
+}
+
+/* Lower ring */
+.d20-face:nth-child(16) {
+  transform: rotateY(36deg) rotateX(-11.5deg) translateZ(calc(var(--dice-size) * 0.4));
+}
+
+.d20-face:nth-child(17) {
+  transform: rotateY(108deg) rotateX(-11.5deg) translateZ(calc(var(--dice-size) * 0.4));
+}
+
+.d20-face:nth-child(18) {
+  transform: rotateY(180deg) rotateX(-11.5deg) translateZ(calc(var(--dice-size) * 0.4));
+}
+
+.d20-face:nth-child(19) {
+  transform: rotateY(252deg) rotateX(-11.5deg) translateZ(calc(var(--dice-size) * 0.4));
+}
+
+/* Bottom face */
+.d20-face:nth-child(20) {
+  transform: rotateX(180deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+@keyframes spin {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  }
+  33% {
+    transform: rotateX(120deg) rotateY(120deg) rotateZ(120deg);
+  }
+  66% {
+    transform: rotateX(240deg) rotateY(240deg) rotateZ(240deg);
+  }
+  100% {
+    transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+  }
+}
+
+.btn-primary {
+  font-family: 'MedievalSharp', cursive;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-red-900);
+}
+
+.btn-secondary {
+  background-color: var(--color-parchment);
+  color: var(--color-brown-900);
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-family: 'MedievalSharp', cursive;
+  border: 2px solid var(--color-brown-900);
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-golden);
+  border-color: var(--color-golden);
+}
+
+.input-field {
+  background-color: var(--color-parchment);
+  border: 2px solid var(--color-brown-900);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--color-golden);
+  box-shadow: 0 0 0 2px var(--color-golden);
+}
+
+/* 2D D20 Loading Animation */
+:root {
+  --dice-size: 120px;
+}
+
+/* D20 Loading Animation */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--color-brown-900);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.dice-wrapper {
+  width: var(--dice-size);
+  height: var(--dice-size);
+  margin: 0 auto;
+  position: relative;
+  animation: rotate 4s linear infinite;
+}
+
+.d20-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.d20-shape {
+  width: var(--dice-size);
+  height: var(--dice-size);
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(145deg, var(--color-brown-900), #2a1c0f);
+  clip-path: polygon(
+    50% 0%,
+    /* top point */ 95% 25%,
+    /* top right */ 95% 75%,
+    /* bottom right */ 50% 100%,
+    /* bottom point */ 5% 75%,
+    /* bottom left */ 5% 25% /* top left */
+  );
+  border: 2px solid var(--color-golden);
+}
+
+.d20-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'MedievalSharp', cursive;
+  font-size: calc(var(--dice-size) * 0.3);
+  color: var(--color-golden);
+  text-shadow: 0 0 5px var(--color-golden);
+  z-index: 1;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* D20 Face Positioning */
+/* Top vertex */
+.d20-face-1 {
+  transform: translateZ(calc(var(--dice-size) * 0.3));
+}
+
+/* Upper pentagon */
+.d20-face-2 {
+  transform: rotateY(72deg) rotateX(63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-3 {
+  transform: rotateY(144deg) rotateX(63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-4 {
+  transform: rotateY(216deg) rotateX(63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-5 {
+  transform: rotateY(288deg) rotateX(63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-6 {
+  transform: rotateY(360deg) rotateX(63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+/* Middle pentagon */
+.d20-face-7 {
+  transform: rotateY(36deg) rotateX(26.565deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-8 {
+  transform: rotateY(108deg) rotateX(26.565deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-9 {
+  transform: rotateY(180deg) rotateX(26.565deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-10 {
+  transform: rotateY(252deg) rotateX(26.565deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-11 {
+  transform: rotateY(324deg) rotateX(26.565deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+/* Lower pentagon */
+.d20-face-12 {
+  transform: rotateY(36deg) rotateX(-26.565deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-13 {
+  transform: rotateY(108deg) rotateX(-26.565deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-14 {
+  transform: rotateY(180deg) rotateX(-26.565deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-15 {
+  transform: rotateY(252deg) rotateX(-26.565deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-16 {
+  transform: rotateY(324deg) rotateX(-26.565deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+/* Bottom pentagon */
+.d20-face-17 {
+  transform: rotateY(72deg) rotateX(-63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-18 {
+  transform: rotateY(144deg) rotateX(-63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+.d20-face-19 {
+  transform: rotateY(216deg) rotateX(-63.435deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+/* Bottom vertex */
+.d20-face-20 {
+  transform: rotateX(180deg) translateZ(calc(var(--dice-size) * 0.3));
+}
+
+/* Face effects */
+.d20-face::before {
+  content: '';
+  position: absolute;
+  bottom: calc(var(--dice-size) * -0.05);
+  left: calc(var(--dice-size) * -0.2);
+  width: calc(var(--dice-size) * 0.4);
+  height: calc(var(--dice-size) * 0.35);
+  background: linear-gradient(to bottom, var(--color-brown-900), rgba(42, 28, 15, 0.9));
+  -webkit-clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  z-index: -1;
+  transform: translateZ(-1px);
+}
+
+.d20-face::after {
+  content: '';
+  position: absolute;
+  bottom: calc(var(--dice-size) * -0.05);
+  left: calc(var(--dice-size) * -0.2);
+  width: calc(var(--dice-size) * 0.4);
+  height: calc(var(--dice-size) * 0.35);
+  background: linear-gradient(45deg, transparent, var(--color-golden) 50%, transparent);
+  opacity: 0.1;
+  -webkit-clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+/* Number positioning and styling */
+.d20-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 20px);
+  z-index: 3;
+  font-weight: bold;
+  filter: drop-shadow(0 0 2px rgba(184, 134, 11, 0.5));
+}
+
+/* Ambient glow effect */
+.d20-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(184, 134, 11, 0.3) 0%,
+    rgba(184, 134, 11, 0.1) 30%,
+    transparent 70%
+  );
+  filter: blur(15px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Number positioning */
+.d20-number {
+  position: relative;
+  z-index: 1;
+  font-weight: bold;
+  transform: scale(1.2);
+  transition: all 0.3s ease;
+}
+
+/* Animation for hover effects */
+@keyframes glowing {
+  0% {
+    box-shadow: 0 0 5px var(--color-golden);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--color-golden);
+  }
+  100% {
+    box-shadow: 0 0 5px var(--color-golden);
+  }
+}
+
+.hover-glow:hover {
+  animation: glowing 1.5s infinite;
+}

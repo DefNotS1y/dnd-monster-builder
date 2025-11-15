@@ -1,0 +1,37 @@
+/* Custom color variables for D&D theme */
+:root {
+  --color-brown-900: #3D2914;
+  --color-red-900: #5C1D1D;
+  --color-golden: #B8860B;
+  --color-parchment: #F5E6D3;
+  
+  --color-background: #2C1810;
+  --color-text: var(--color-parchment);
+  --color-heading: var(--color-golden);
+  
+  --color-border: var(--color-brown-900);
+  --color-border-hover: var(--color-golden);
+
+  --section-gap: 160px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition: color 0.5s, background-color 0.5s;
+  line-height: 1.6;
+  font-family: 'Crimson Text', serif;
+  font-size: 16px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
